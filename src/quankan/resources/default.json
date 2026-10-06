@@ -1,0 +1,35 @@
+{
+  "output_dir": "outputs",
+  "locs_path": "channel_62_pos.locs",
+  "sessions": [
+    1,
+    2,
+    3
+  ],
+  "epochs": 300,
+  "batch_size": 32,
+  "validation_fraction": 0.2,
+  "workers": 0,
+  "quantum_device": "default.qubit",
+  "noise_std": 0.035,
+  "gain_jitter": 0.1,
+  "channel_drop": 0.05,
+  "time_mask": 0.1,
+  "band_drop": 0.15,
+  "augmentation_probability": 0.85,
+  "backbone_lr": 0.0003,
+  "head_lr": 0.0005,
+  "frontend_lr": 0.0008,
+  "weight_decay": 0.0001,
+  "minimum_lr": 1e-06,
+  "spatial_tokens": 16,
+  "embedding_dim": 192,
+  "loss_weight_initialization": {
+    "classical": 0.2,
+    "frontend": 0.25,
+    "subject": 0.2,
+    "supcon": 0.08,
+    "prototype": 0.05,
+    "quantum": 0.15
+  }
+}

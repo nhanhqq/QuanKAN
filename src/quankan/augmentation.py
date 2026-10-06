@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import torch
-from torch.utils.data import Dataset
 
 
 class RobustEEGAugment:
@@ -39,11 +40,11 @@ class RobustEEGAugment:
             x[:, ~keep_channels, :] = 0.0
 
         valid_length = int(valid_steps.sum().item())
-        max_mask = int(round(valid_length * self.time_mask))
+        max_mask = round(valid_length * self.time_mask)
         if max_mask > 0:
             width = int(torch.randint(1, max_mask + 1, ()).item())
             start = int(torch.randint(0, max(valid_length - width + 1, 1), ()).item())
-            x[start:start + width] = 0.0
+            x[start : start + width] = 0.0
 
         if x.size(2) > 1 and torch.rand(()) < self.band_drop_probability:
             band = int(torch.randint(x.size(2), ()).item())

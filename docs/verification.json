@@ -1,0 +1,194 @@
+{
+  "generated_utc": "2026-10-06T13:15:44.366290+00:00",
+  "source_authority": "updated LaTeX supplied in user message on 2026-10-06",
+  "runtime": {
+    "python": "3.10.20",
+    "torch": "2.11.0+cpu",
+    "pennylane": "0.42.3",
+    "numpy": "2.2.6",
+    "scikit_learn": "1.7.2"
+  },
+  "checks": {
+    "pytest_passed": 23,
+    "ruff_check": "passed",
+    "ruff_format_check": "31 files formatted",
+    "compile": "passed",
+    "cli_help": "passed",
+    "wheel_build": "passed",
+    "installed_wheel_external_import_config_and_forward": "prior revision verified; current wheel rebuilt",
+    "checkpoint_weights_only_reload": "passed",
+    "learnable_loss_gradient_update_checkpoint_restore": "passed"
+  },
+  "real_dataset_loaders": [
+    {
+      "dataset": "seed",
+      "shape": [
+        675,
+        265,
+        62,
+        5
+      ],
+      "subjects": 15,
+      "classes": 3,
+      "labels": [
+        0,
+        1,
+        2
+      ],
+      "finite": true
+    },
+    {
+      "dataset": "seediv",
+      "shape": [
+        1080,
+        64,
+        62,
+        5
+      ],
+      "subjects": 15,
+      "classes": 4,
+      "labels": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "finite": true
+    },
+    {
+      "dataset": "seedv",
+      "shape": [
+        720,
+        74,
+        62,
+        5
+      ],
+      "subjects": 16,
+      "classes": 5,
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "finite": true
+    },
+    {
+      "dataset": "seedvii",
+      "shape": [
+        1600,
+        87,
+        62,
+        5
+      ],
+      "subjects": 20,
+      "classes": 7,
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "finite": true
+    }
+  ],
+  "real_data_execution": {
+    "dataset": "seediv",
+    "epochs": 2,
+    "target": "P1",
+    "seed": 5,
+    "all_available_sessions": true,
+    "batch_size": 32,
+    "split_sizes": {
+      "train": 806,
+      "validation": 202,
+      "test": 72
+    },
+    "test_evaluations": 1,
+    "selected_epoch": 2,
+    "artifact_root": "/tmp/quankan-updated-latex-final-real-seediv-20261006",
+    "purpose": "execution check only; not full LOSO or published-score reproduction",
+    "revision_scope": "historical fixed-weight revision; not a validation of the current learned objective"
+  },
+  "synthetic_execution": {
+    "epochs": 2,
+    "artifact_root": "/tmp/quankan-learnable-loss-smoke-20261006",
+    "loss_weights_learnable": true,
+    "purpose": "current learnable-objective execution check only"
+  },
+  "models": [
+    {
+      "dataset": "seed",
+      "source_subject_classes": 14,
+      "stored_parameters": 468661,
+      "fp32_weights_mib": 1.7877998352050781,
+      "training_objective_parameters": 6,
+      "total_trainable_parameters": 468667
+    },
+    {
+      "dataset": "seediv",
+      "source_subject_classes": 14,
+      "stored_parameters": 472599,
+      "fp32_weights_mib": 1.8028221130371094,
+      "training_objective_parameters": 6,
+      "total_trainable_parameters": 472605
+    },
+    {
+      "dataset": "seedv",
+      "source_subject_classes": 15,
+      "stored_parameters": 476730,
+      "fp32_weights_mib": 1.8185806274414062,
+      "training_objective_parameters": 6,
+      "total_trainable_parameters": 476736
+    },
+    {
+      "dataset": "seedvii",
+      "source_subject_classes": 19,
+      "stored_parameters": 485378,
+      "fp32_weights_mib": 1.8515701293945312,
+      "training_objective_parameters": 6,
+      "total_trainable_parameters": 485384
+    }
+  ],
+  "preserved_legacy_sources": [
+    {
+      "path": "/home/namphuongtran9196/intel_project/QuanKAN/models/quan_kan_v4.py",
+      "sha256": "c8358b46b0d8701da8998b913bf947432e24d3ffdf8bef1aa34cb97d747e6210",
+      "matches_original": true
+    },
+    {
+      "path": "/home/namphuongtran9196/intel_project/QuanKAN/models/quan_kan.py",
+      "sha256": "8d750f694c9cb27743222b80820c0dd6cf498520b11f911e134248cd0e7a1c2c",
+      "matches_original": true
+    },
+    {
+      "path": "/home/namphuongtran9196/intel_project/QuanKAN/train_v4.py",
+      "sha256": "6adcf0d710b3726b865d76ee3947b5ddcb5ec3d048dffb836604dfd21b09812e",
+      "matches_original": true
+    },
+    {
+      "path": "/home/namphuongtran9196/intel_project/QuanKAN/train_v4_loso.py",
+      "sha256": "ea524ba6f4a96286187ffecaf7d01884f76f920265dba120de42eb8012f8fa1e",
+      "matches_original": true
+    }
+  ],
+  "archived_pdf": {
+    "sha256": "afa8ba87f38853d5ca8c6933ff82a6b052f3a237eda7b01fd945e99f4a50d96d",
+    "git_blob": "7ace339ad1f8a4d5b18f09656be9581288997c11",
+    "unchanged_from_HEAD": true
+  },
+  "wheel": {
+    "path": "/home/namphuongtran9196/intel_project/FinalQuanKAN/QuanKAN/dist/quankan_eeg-0.1.0-py3-none-any.whl",
+    "sha256": "02fbb86d7424fbaacd33cf85e7439c3b6b4369a39ed2ad4ba3b5d23906345829"
+  },
+  "limitations": [
+    "No complete 300-epoch five-seed LOSO campaign was run.",
+    "Learnable weights clarified by the author; initialization/parameterization and several other details are absent from the supplied LaTeX.",
+    "Manuscript Table XII counts describe legacy V4 models, not this equation-aligned implementation.",
+    "Verified runtime uses CPU; CUDA execution has not been verified in this environment."
+  ]
+}

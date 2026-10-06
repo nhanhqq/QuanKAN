@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quankan-eeg"
+version = "0.1.0"
+description = "Paper-aligned QuanKAN implementation for cross-subject EEG emotion recognition"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+  "numpy==2.2.6",
+  "pandas==2.3.3",
+  "pennylane==0.42.3",
+  "scikit-learn==1.7.2",
+  "scipy==1.15.3",
+  "torch==2.11.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.3,<9"]
+
+[project.scripts]
+quankan-train = "quankan.training.cli:main"
+quankan-smoke = "quankan.smoke:main"
+quankan-size = "quankan.model_size:main"
+
+[tool.setuptools.package-data]
+quankan = ["resources/*.json", "resources/*.locs"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"

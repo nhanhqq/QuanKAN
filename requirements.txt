@@ -1,7 +1,7 @@
-numpy
-pandas
-pennylane
-pytest
-scikit-learn
-scipy
-torch
+numpy==2.2.6
+pandas==2.3.3
+pennylane==0.42.3
+pytest>=8.3,<9
+scikit-learn==1.7.2
+scipy==1.15.3
+torch==2.11.0

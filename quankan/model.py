@@ -348,19 +348,19 @@ class TemporalConvBlock(nn.Module):
 
 class SpatioTemporalGraphEncoder(nn.Module):
     def __init__(self, num_nodes: int = 62, bands: int = 5,
-                 graph_dim: int = 32, spatial_tokens: int = 16,
-                 num_classes: int = 4) -> None:
+                 graph_dim: int = 32, spatial_tokens: int = 16) -> None:
         super().__init__()
         self.num_nodes = num_nodes
         self.bands = bands
         self.graph_attention_1 = DenseGraphAttention(bands, graph_dim, heads=8)
         self.graph_attention_2 = DenseGraphAttention(graph_dim, graph_dim, heads=8)
         self.spatial_pooling = LearnedSpatialPooling(graph_dim, spatial_tokens)
-        temporal_dim = spatial_tokens * graph_dim
-        self.temporal_conv_3 = TemporalConvBlock(temporal_dim, 96, 3)
-        self.temporal_conv_5 = TemporalConvBlock(temporal_dim, 96, 5)
-        self.temporal_attention = nn.Linear(temporal_dim, 1)
-        self.retained_emotion_classifier = KANLinear(num_nodes * graph_dim, num_classes)
+        spatial_dim = spatial_tokens * graph_dim
+        self.spatial_normalization = nn.LayerNorm(spatial_dim)
+        self.spatial_projection = nn.Linear(spatial_dim, 256)
+        self.temporal_conv_3 = TemporalConvBlock(256, 96, 3)
+        self.temporal_conv_5 = TemporalConvBlock(256, 96, 5)
+        self.temporal_attention = nn.Linear(256, 1)
 
     def forward(self, x: Tensor) -> Tensor:
         batch, steps, nodes, bands = x.shape
@@ -373,9 +373,10 @@ class SpatioTemporalGraphEncoder(nn.Module):
         electrodes = self.graph_attention_1(electrodes)
         electrodes = self.graph_attention_2(electrodes)
         tokens = self.spatial_pooling(electrodes)
-        temporal = tokens.reshape(batch, steps, -1).transpose(1, 2)
-        positions = sinusoidal_encoding(steps, temporal.shape[1], x.device, x.dtype)
-        temporal = (temporal + positions.T.unsqueeze(0)).transpose(1, 2)
+        spatial = tokens.reshape(batch, steps, -1)
+        temporal = self.spatial_projection(self.spatial_normalization(spatial))
+        positions = sinusoidal_encoding(steps, 256, x.device, x.dtype)
+        temporal = temporal + positions.unsqueeze(0)
         temporal = self.temporal_conv_3(temporal)
         temporal = self.temporal_conv_5(temporal)
         weights = F.softmax(self.temporal_attention(temporal).squeeze(-1), dim=1)
@@ -383,7 +384,8 @@ class SpatioTemporalGraphEncoder(nn.Module):
 
 
 class QuantumBranch(nn.Module):
-    def __init__(self, embedding_dim: int, device_name: str = "default.qubit") -> None:
+    def __init__(self, embedding_dim: int = 192,
+                 device_name: str = "default.qubit") -> None:
         super().__init__()
         self.num_qubits = 4
         self.num_layers = 4
@@ -435,20 +437,18 @@ class QuanKAN(nn.Module):
     def __init__(self, adjacency: Tensor, num_classes: int, num_subjects: int,
                  num_nodes: int = 62, bands: int = 5,
                  quantum_device: str = "default.qubit",
-                 spatial_tokens: int = 16, embedding_dim: int = 256) -> None:
+                 spatial_tokens: int = 16, embedding_dim: int = 192) -> None:
         super().__init__()
         if num_classes < 2:
             raise ValueError("num_classes must be at least 2")
         self.num_classes = num_classes
         self.frontend = FeatureEnhancer(adjacency, num_nodes, bands, num_classes)
         self.encoder = SpatioTemporalGraphEncoder(
-            num_nodes, bands, spatial_tokens=spatial_tokens,
-            num_classes=num_classes,
+            num_nodes, bands, spatial_tokens=spatial_tokens
         )
         self.embedding_dim = embedding_dim
-        temporal_dim = spatial_tokens * 32
-        self.embedding_normalization = nn.LayerNorm(temporal_dim)
-        self.embedding_projection = nn.Linear(temporal_dim, embedding_dim)
+        self.embedding_normalization = nn.LayerNorm(256)
+        self.embedding_projection = nn.Linear(256, embedding_dim)
         self.classical_dropout = nn.Dropout(0.20)
         self.classical_classifier = KANLinear(embedding_dim, num_classes)
         self.quantum_branch = QuantumBranch(embedding_dim, quantum_device)

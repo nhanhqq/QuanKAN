@@ -55,12 +55,17 @@ def test_dataset_graph_and_seedvii_labels():
     assert torch.isfinite(torch.from_numpy(adjacency)).all()
 
 
-def test_v4_model_forward_shapes():
+def test_paper_model_forward_shapes():
     model = QuanKAN(torch.eye(62), num_classes=3, num_subjects=14).eval()
+    assert model.encoder.spatial_projection.in_features == 512
+    assert model.encoder.spatial_projection.out_features == 256
+    assert model.encoder.temporal_attention.in_features == 256
+    assert model.embedding_projection.in_features == 256
+    assert model.embedding_projection.out_features == 192
     features = torch.randn(2, 16, 62, 5)
     features[1, 12:] = 0
     with torch.no_grad():
         outputs = model(features)
     assert outputs["emotion_logits"].shape == (2, 3)
-    assert outputs["embedding"].shape == (2, 256)
+    assert outputs["embedding"].shape == (2, 192)
     assert outputs["frontend_logits"].shape == (2, 3)
